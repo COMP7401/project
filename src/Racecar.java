@@ -22,6 +22,47 @@ public class Racecar {
      * Main entry to the program.
      */
     public static void main(String[] args) {
-  
+        
+        Racecar car = new Racecar();
+        car.run();
     }
+    
+    public Racecar() {
+    
+    }
+    
+    public void run() {
+        Motor.A.setSpeed(360);
+        Motor.C.setSpeed(360);
+        this.waitForFlag();
+        while(true) {
+            moveForward();
+        }
+        
+
+    }
+    
+    /**
+     * Waiting until the flag is connected.
+     */
+    public void waitForFlag() {
+        NXTConnection connection = Bluetooth.waitForConnection();
+        System.out.println("Connected to Flag");
+        DataInputStream dis = connection.openDataInputStream();
+        try {
+            int a = dis.readInt();
+        } catch (Exception ex) {
+            // nothing
+        }
+    }
+    
+    /**
+     * Move forward
+     */
+    public void moveForward() {
+        Motor.A.forward();
+        Motor.C.forward();
+    }
+    
+    
 }
