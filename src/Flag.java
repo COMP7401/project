@@ -14,21 +14,44 @@ import java.io.*;
  * @author Harv, Callum, Kyle
  */
 public class Flag {
-
+     public static final int FLAG_DEVICE  = 5;
+     public static final int FLAG_SIGNAL = 4;
     /**
      * Main entry to the program.
      */
     public static void main(String[] args) {
         Flag flag = new Flag();
-        flag.run();
-    }
-    
-    public Flag() {
-    
-    }
-    
-    public void run() {
         
+        RemoteDevice racecar = Bluetooth.getKnownDevice("NXT");
+//        RemoteDevice racecar2 = Bluetooth.getKnownDevice("?");
+//        RemoteDevice racecar3 = Bluetooth.getKnownDevice("?");
+        
+        if (racecar == null) {
+            System.out.println("No Such device existed");
+            System.exit(1);
+        }
+        BTConnection racecarConnection = Bluetooth.connect(racecar);
+       // BTConnection racecarConnection2 = Bluetooth.connect(racecar2);
+       // BTConnection racecarConnection3 = Bluetooth.connect(racecar3);
+        
+        if (racecarConnection == null) {
+            System.out.println("Connection Failed");
+            System.exit(1);
+        }
+       DataOutputStream dos = racecarConnection.openDataOutputStream();
+        
+        try {
+            dos.writeInt(FLAG_DEVICE);
+            Button.waitForPress();
+            dos.writeInt(FLAG_SIGNAL);
+            //add three data output streams
+            
+        } catch(Exception ex) {
+            //Do nothing
+        }
+    }
+
+    public void run() {
+
     }
 }
-
