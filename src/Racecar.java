@@ -36,8 +36,9 @@ public class Racecar {
      */
     public static void main(String[] args) {
         Racecar car = new Racecar();
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 1; i++) {
             NXTConnection connection = Bluetooth.waitForConnection();
+            System.out.println("Connected to somethin");
             DataInputStream dis = connection.openDataInputStream();
             try {
                 int check = dis.readInt();
@@ -49,9 +50,11 @@ public class Racecar {
                     car.setRacecarConnection(connection);
                     car.setRacecarInputStream(dis);
                     System.out.println("Connected to Controller");
+                } else {
+                    System.out.println("Found nothing");
                 }
             } catch(Exception e) {
-                
+                System.out.println(e.getMessage());
             }
         }    
         car.run();
