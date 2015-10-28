@@ -18,10 +18,10 @@ import java.io.*;
  * @author Harv, Callum, Kyle
  */
 public class Racecar {
-    private NXTConnection racecarConnection;
-    private NXTConnection flagConnection;
-    private DataInputStream flagInputStream;
-    private DataInputStream racecarInputStream;
+    private static NXTConnection racecarConnection;
+    private static NXTConnection flagConnection;
+    private static DataInputStream flagInputStream;
+    private static DataInputStream racecarInputStream;
     public static final int FWD = 0;
     public static final int STOP = 1;
     public static final int LEFT = 2;
@@ -36,7 +36,7 @@ public class Racecar {
      */
     public static void main(String[] args) {
         Racecar car = new Racecar();
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 1; i++) {
             NXTConnection connection = Bluetooth.waitForConnection();
             DataInputStream dis = connection.openDataInputStream();
             try {
@@ -45,6 +45,7 @@ public class Racecar {
                     car.setFlagConnection(connection);
                     car.setFlagInputStream(dis);
                     System.out.println("Connected to Flag");
+                    System.out.println("");
                 } else if(check == CONTROLLER_DEVICE) {
                     car.setRacecarConnection(connection);
                     car.setRacecarInputStream(dis);
@@ -53,7 +54,14 @@ public class Racecar {
             } catch(Exception e) {
                 
             }
-        }    
+        }   
+        try {
+            int startFlag = flagInputStream.readInt();
+            System.out.println("got the start flag");
+        } catch(Exception e) {
+
+        }
+        System.out.println("HELLO!!!!!!!!");
         car.run();
     }
     

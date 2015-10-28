@@ -14,7 +14,7 @@ import java.io.*;
  * @author Harv, Callum, Kyle
  */
 public class Flag {
-     public static final int FLAG_DEVICE  = 5;
+     public static final int FLAG_DEVICE  = 6;
      public static final int FLAG_SIGNAL = 4;
     /**
      * Main entry to the program.
@@ -22,7 +22,7 @@ public class Flag {
     public static void main(String[] args) {
         Flag flag = new Flag();
         
-        RemoteDevice racecar = Bluetooth.getKnownDevice("NXT");
+        RemoteDevice racecar = Bluetooth.getKnownDevice("KAITO");
 //        RemoteDevice racecar2 = Bluetooth.getKnownDevice("?");
 //        RemoteDevice racecar3 = Bluetooth.getKnownDevice("?");
         
@@ -42,8 +42,10 @@ public class Flag {
         
         try {
             dos.writeInt(FLAG_DEVICE);
+            dos.flush();
             Button.waitForPress();
             dos.writeInt(FLAG_SIGNAL);
+            dos.flush();
             //add three data output streams
             
         } catch(Exception ex) {
