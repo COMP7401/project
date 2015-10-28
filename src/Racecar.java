@@ -33,37 +33,51 @@ public class Racecar {
      * Main entry to the program.
      */
     public static void main(String[] args) {
+        NXTConnection[] connections = new NXTConnection[2];
+        DataInputStream[] inputStreams = new DataInputStream[2];
         Racecar car = new Racecar();
         for (int i = 0; i < 2; i++) {
-            NXTConnection connection = Bluetooth.waitForConnection();
-            System.out.println("Connected to somethin");
-            DataInputStream dis = connection.openDataInputStream();
+            System.out.println("Looping");
+            connections[i] = Bluetooth.waitForConnection();
+            System.out.println("connections[i] " + connections[i]);
+            System.out.println("Got some connection");
+            inputStreams[i] = connections[i].openDataInputStream();
             try {
-                int check = dis.readInt();
-                if (check == FLAG_DEVICE) {
-                    car.setFlagConnection(connection);
-                    car.setFlagInputStream(dis);
-                    System.out.println("Connected to Flag");
-                    System.out.println("");
-                } else if (check == CONTROLLER_DEVICE) {
-                    car.setRemoteControlConnection(connection);
-                    car.setRemoteControlInputStream(dis);
-                    System.out.println("Connected to Controller");
-                } else {
-                    System.out.println("Found nothing");
+                int check = inputStreams[i].readInt();
+                switch (check) {
+                    case FLAG_DEVICE:
+                        car.setFlagConnection(connections[i]);
+                        car.setFlagInputStream(inputStreams[i]);
+                        System.out.println("Connected to Flag");
+                        System.out.println("");
+                        break;
+                    case CONTROLLER_DEVICE:
+                        car.setRemoteControlConnection(connections[i]);
+                        car.setRemoteControlInputStream(inputStreams[i]);
+                        System.out.println("Connected to Controller");
+                        break;
+                    default:
+                        System.out.println("Unknown device");
+                        break;
                 }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            } catch (java.io.IOException e) {
+                System.out.println("Caught IOException");
+            } catch(java.lang.NullPointerException e) {
+                System.out.println("NullPointerException");
             }
+            System.out.println("going to next iteration");
+            Button.waitForPress();
         }
         try {
             int startFlag = flagInputStream.readInt();
             System.out.println("got the start flag");
-        } catch (Exception e) {
-
+            moveForward();
+            Button.waitForPress();
+        } catch (java.io.IOException e) {
+            System.out.println("Caught IOException");
         }
-        System.out.println("HELLO!!!!!!!!");
-        car.run();
+        // System.out.println("HELLO!!!!!!!!");
+        // car.run();
     }
 
     /**
@@ -134,7 +148,7 @@ public class Racecar {
     /**
      * Move forward
      */
-    public void moveForward() {
+    public static void moveForward() {
         Motor.A.forward();
         Motor.C.forward();
     }

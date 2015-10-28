@@ -46,11 +46,13 @@ public class Flag {
             Button.waitForPress();
             dos.writeInt(FLAG_SIGNAL);
             dos.flush();
+            System.out.println("Sent FLAG_SIGNAL");
             //add three data output streams
             
         } catch(Exception ex) {
             //Do nothing
         }
+        Button.waitForPress();
     }
 
     public void run() {
