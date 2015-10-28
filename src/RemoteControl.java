@@ -84,12 +84,35 @@ public class RemoteControl {
     }
     
     public void run() {
-        while(true) {
-            if(leftButton.isPressed()) {
-            
-            } 
-
-           
+        try {
+            while(true) {
+                if(leftButton.isPressed()) {
+                    System.out.println("Sending Left Signal");
+                    racecarOutputStream.writeInt(LEFT);
+                    racecarOutputStream.flush();
+                    System.out.println("Sent Left Signal");
+                } 
+                if(rightButton.isPressed()) {
+                    System.out.println("Sending Right Signal");
+                    racecarOutputStream.writeInt(RIGHT);
+                    racecarOutputStream.flush();
+                    System.out.println("Sent Right Signal");
+                }
+                if(centerButton.isPressed()) {
+                    System.out.println("Sending Forward Signal");
+                    racecarOutputStream.writeInt(FWD);
+                    racecarOutputStream.flush();
+                    System.out.println("Sent Forward Signal");
+                }
+                if(bottomButton.isPressed()) {
+                    System.out.println("Sending Stop Signal");
+                    racecarOutputStream.writeInt(STOP);
+                    racecarOutputStream.flush();
+                    System.out.println("Sent stop Signal");
+                }
+            }
+        } catch(IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 }
