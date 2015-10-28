@@ -92,19 +92,23 @@ public class RemoteControl {
                         racecarOutputStream.writeInt(LEFT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Left Signal");
+                        break;
                     case 4:
                         racecarOutputStream.writeInt(RIGHT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Right Signal");
+                        break;
                     case 1:
                         System.out.println("Sending Forward Signal");
                         racecarOutputStream.writeInt(FWD);
                         racecarOutputStream.flush();
                         System.out.println("Sent Forward Signal");
+                        break;
                     case 8:
                         racecarOutputStream.writeInt(STOP);
                         racecarOutputStream.flush();
                         System.out.println("Sent stop Signal");
+                        break;
                     default:
                         break;
                 }

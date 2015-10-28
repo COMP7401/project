@@ -96,9 +96,9 @@ public class Racecar {
     public void run() {
         Motor.A.setSpeed(360);
         Motor.C.setSpeed(360);
+        moveForward();
 
         while(true) {
-            moveForward();
         }
     }
   
