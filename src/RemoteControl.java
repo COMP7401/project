@@ -84,35 +84,34 @@ public class RemoteControl {
     }
     
     public void run() {
-        try {
-            while(true) {
-                if(leftButton.isPressed()) {
-                    System.out.println("Sending Left Signal");
-                    racecarOutputStream.writeInt(LEFT);
-                    racecarOutputStream.flush();
-                    System.out.println("Sent Left Signal");
-                } 
-                if(rightButton.isPressed()) {
-                    System.out.println("Sending Right Signal");
-                    racecarOutputStream.writeInt(RIGHT);
-                    racecarOutputStream.flush();
-                    System.out.println("Sent Right Signal");
+        while(true) {
+            try {
+                int buttonID = Button.waitForPress();
+                switch (buttonID) {
+                    case 2:
+                        racecarOutputStream.writeInt(LEFT);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Left Signal");
+                    case 4:
+                        racecarOutputStream.writeInt(RIGHT);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Right Signal");
+                    case 1:
+                        System.out.println("Sending Forward Signal");
+                        racecarOutputStream.writeInt(FWD);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Forward Signal");
+                    case 8:
+                        racecarOutputStream.writeInt(STOP);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent stop Signal");
+                    default:
+                        break;
                 }
-                if(centerButton.isPressed()) {
-                    System.out.println("Sending Forward Signal");
-                    racecarOutputStream.writeInt(FWD);
-                    racecarOutputStream.flush();
-                    System.out.println("Sent Forward Signal");
-                }
-                if(bottomButton.isPressed()) {
-                    System.out.println("Sending Stop Signal");
-                    racecarOutputStream.writeInt(STOP);
-                    racecarOutputStream.flush();
-                    System.out.println("Sent stop Signal");
-                }
+            } catch(Exception e) {
+                //nothing
             }
-        } catch(IOException ex) {
-            System.out.println(ex.getMessage());
+            
         }
     }
 }
