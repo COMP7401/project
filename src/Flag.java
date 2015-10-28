@@ -22,7 +22,7 @@ public class Flag {
     public static void main(String[] args) {
         Flag flag = new Flag();
         
-        RemoteDevice racecar = Bluetooth.getKnownDevice("KAITO");
+        RemoteDevice racecar = Bluetooth.getKnownDevice("Batmobile");
 //        RemoteDevice racecar2 = Bluetooth.getKnownDevice("?");
 //        RemoteDevice racecar3 = Bluetooth.getKnownDevice("?");
         

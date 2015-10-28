@@ -38,7 +38,7 @@ public class RemoteControl {
      */
     public static void main(String[] args) {
         RemoteControl remote = new RemoteControl();
-        RemoteDevice racecar = Bluetooth.getKnownDevice("NXT");
+        RemoteDevice racecar = Bluetooth.getKnownDevice("Batmobile");
         
         if (racecar == null) {
             System.out.println("No Such device existed");
