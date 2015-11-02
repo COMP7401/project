@@ -14,41 +14,47 @@ import java.io.*;
  * @author Harv, Callum, Kyle
  */
 public class Flag {
-     public static final int FLAG_DEVICE  = 6;
-     public static final int FLAG_SIGNAL = 4;
+
+    public static final int FLAG_SIGNAL = 4;
+
     /**
      * Main entry to the program.
      */
     public static void main(String[] args) {
         Flag flag = new Flag();
-        
-        RemoteDevice racecar = Bluetooth.getKnownDevice("KAITO");
+
+        RemoteDevice remote = Bluetooth.getKnownDevice("KAITO");
 //        RemoteDevice racecar2 = Bluetooth.getKnownDevice("?");
 //        RemoteDevice racecar3 = Bluetooth.getKnownDevice("?");
-        
-        if (racecar == null) {
+
+        if (remote == null) {
             System.out.println("No Such device existed");
             System.exit(1);
         }
-        BTConnection racecarConnection = Bluetooth.connect(racecar);
+        BTConnection remoteConnection = Bluetooth.connect(remote);
        // BTConnection racecarConnection2 = Bluetooth.connect(racecar2);
-       // BTConnection racecarConnection3 = Bluetooth.connect(racecar3);
-        
-        if (racecarConnection == null) {
+        // BTConnection racecarConnection3 = Bluetooth.connect(racecar3);
+
+        if (remoteConnection == null) {
             System.out.println("Connection Failed");
             System.exit(1);
         }
-       DataOutputStream dos = racecarConnection.openDataOutputStream();
-        
+        DataOutputStream dos = remoteConnection.openDataOutputStream();
+        //DataOutputStream dos2 = remoteConnection2.openDataOutputStream();
+        //DataOutputStream dos3 = remoteConnection3.openDataOutputStream();
+
         try {
-            dos.writeInt(FLAG_DEVICE);
-            dos.flush();
             Button.waitForPress();
+            System.out.println("Sending Flag signal to Remote Control");
             dos.writeInt(FLAG_SIGNAL);
             dos.flush();
+            System.out.println("Flag signal sent to remote control");
             //add three data output streams
-            
-        } catch(Exception ex) {
+            Thread.sleep(5000);
+            dos.close();
+            System.exit(1);
+
+        } catch (Exception ex) {
             //Do nothing
         }
     }

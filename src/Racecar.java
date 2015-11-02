@@ -17,53 +17,49 @@ import java.io.*;
  */
 public class Racecar {
 
-    private static NXTConnection remoteControlConnection;
-    private static NXTConnection flagConnection;
-    private static DataInputStream flagInputStream;
-    private static DataInputStream remoteControlInputStream;
+    private NXTConnection remoteControlConnection;
+    private DataInputStream remoteControlInputStream;
     public static final int FWD = 0;
     public static final int STOP = 1;
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     public static final int FLAG_SIGNAL = 4;
     public static final int CONTROLLER_DEVICE = 5;
-    public static final int FLAG_DEVICE = 6;
 
     /**
      * Main entry to the program.
      */
     public static void main(String[] args) {
         Racecar car = new Racecar();
-        for (int i = 0; i < 2; i++) {
-            NXTConnection connection = Bluetooth.waitForConnection();
-            System.out.println("Connected to somethin");
-            DataInputStream dis = connection.openDataInputStream();
-            try {
-                int check = dis.readInt();
-                if (check == FLAG_DEVICE) {
-                    car.setFlagConnection(connection);
-                    car.setFlagInputStream(dis);
-                    System.out.println("Connected to Flag");
-                    System.out.println("");
-                } else if (check == CONTROLLER_DEVICE) {
-                    car.setRemoteControlConnection(connection);
-                    car.setRemoteControlInputStream(dis);
-                    System.out.println("Connected to Controller");
-                } else {
-                    System.out.println("Found nothing");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
+        int check = -1;
+        NXTConnection connection = Bluetooth.waitForConnection();
+        System.out.println("Connected to remoteControl");
+        DataInputStream dis = connection.openDataInputStream();
         try {
-            int startFlag = flagInputStream.readInt();
-            System.out.println("got the start flag");
+            check = dis.readInt();
+            if (check == CONTROLLER_DEVICE) {
+                car.setRemoteControlConnection(connection);
+                car.setRemoteControlInputStream(dis);
+            } else {
+                System.out.println("Did not find remote");
+            }
         } catch (Exception e) {
-
+            //nothing
         }
-        System.out.println("HELLO!!!!!!!!");
-        car.run();
+
+        //Flag signal to get moving
+        //Had to add this second flag signal B/C the car would start moving as soon as the remote connected
+        try {
+            check = dis.readInt();
+            if (check == FLAG_SIGNAL) {
+                System.out.println("Recived flag signal, ready 2 go");
+                car.run();
+            } else {
+                System.out.println("No flag signal");
+            }
+        } catch (Exception e) {
+            //nothing
+        }
     }
 
     /**
@@ -74,14 +70,6 @@ public class Racecar {
 
     public void setRemoteControlConnection(NXTConnection remoteControlConnection) {
         this.remoteControlConnection = remoteControlConnection;
-    }
-
-    public void setFlagConnection(NXTConnection flagConnection) {
-        this.flagConnection = flagConnection;
-    }
-
-    public void setFlagInputStream(DataInputStream flagInputStream) {
-        this.flagInputStream = flagInputStream;
     }
 
     public void setRemoteControlInputStream(DataInputStream remoteControlInputStream) {
@@ -139,18 +127,18 @@ public class Racecar {
         Motor.C.forward();
     }
 
-   public void stop() {
-       Motor.A.stop();
-       Motor.C.stop();
-   }
-   
-   public void turnLeft() {
-       Motor.A.rotate(-10,true);
-       Motor.C.rotate(10,true);
-   }
-   
+    public void stop() {
+        Motor.A.stop();
+        Motor.C.stop();
+    }
+
+    public void turnLeft() {
+        Motor.A.rotate(-10, true);
+        Motor.C.rotate(10, true);
+    }
+
     public void turnRight() {
-       Motor.A.rotate(10,true);
-       Motor.C.rotate(-10,true);
-   }
+        Motor.A.rotate(10, true);
+        Motor.C.rotate(-10, true);
+    }
 }
