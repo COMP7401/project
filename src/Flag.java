@@ -31,7 +31,9 @@ public class Flag {
             System.out.println("No Such device existed");
             System.exit(1);
         }
+        System.out.println("Testing connection");
         BTConnection remoteConnection = Bluetooth.connect(remote);
+        System.out.println("Connected to remote");
        // BTConnection racecarConnection2 = Bluetooth.connect(racecar2);
         // BTConnection racecarConnection3 = Bluetooth.connect(racecar3);
 
@@ -39,20 +41,18 @@ public class Flag {
             System.out.println("Connection Failed");
             System.exit(1);
         }
+        
+        System.out.println("Getting ready to output signal");
         DataOutputStream dos = remoteConnection.openDataOutputStream();
         //DataOutputStream dos2 = remoteConnection2.openDataOutputStream();
         //DataOutputStream dos3 = remoteConnection3.openDataOutputStream();
-
+        
         try {
-            Button.waitForPress();
             System.out.println("Sending Flag signal to Remote Control");
             dos.writeInt(FLAG_SIGNAL);
             dos.flush();
             System.out.println("Flag signal sent to remote control");
             //add three data output streams
-            Thread.sleep(5000);
-            dos.close();
-            System.exit(1);
 
         } catch (Exception ex) {
             //Do nothing
