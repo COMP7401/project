@@ -15,11 +15,11 @@ public class Middle {
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
     public static final int FLAG_SIGNAL = 4;
-    private NXTConnection racecarConnection;
-    private DataOutputStream racecarOutputStream;
+    private static NXTConnection racecarConnection;
+    private static DataOutputStream racecarOutputStream;
 
     public static void main(String[] args) {
-        
+
         System.out.println("Waiting for Flag connection");
         NXTConnection flagConnection = Bluetooth.waitForConnection();
         System.out.println("Connected to flag");
@@ -49,24 +49,61 @@ public class Middle {
         }
 
         DataOutputStream dos = endConnection.openDataOutputStream();
+        racecarConnection = endConnection;
+        racecarOutputStream = dos;
         System.out.println("output stream created");
 
         try {
             System.out.println("Sending Flag signal to racecar");
             dos.writeInt(reading);
-            dos.flush(); 
+            dos.flush();
             System.out.println("Sent flag singal to racecar");
         } catch (IOException E) {
 
         }
-        Button.waitForPress();
+        run();
     }
-    
-     public void setRacecarConnection(NXTConnection racecarConnection) {
+
+    public void setRacecarConnection(NXTConnection racecarConnection) {
         this.racecarConnection = racecarConnection;
     }
 
     public void setRacecarOutputStream(DataOutputStream racecarOutputStream) {
         this.racecarOutputStream = racecarOutputStream;
+    }
+
+    public static void run() {
+        while (true) {
+            try {
+                int buttonID = Button.waitForPress();
+                switch (buttonID) {
+                    case 2:
+                        racecarOutputStream.writeInt(LEFT);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Left Signal");
+                        break;
+                    case 4:
+                        racecarOutputStream.writeInt(RIGHT);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Right Signal");
+                        break;
+                    case 1:
+                        System.out.println("Sending Forward Signal");
+                        racecarOutputStream.writeInt(FWD);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent Forward Signal");
+                        break;
+                    case 8:
+                        racecarOutputStream.writeInt(STOP);
+                        racecarOutputStream.flush();
+                        System.out.println("Sent stop Signal");
+                        break;
+                    default:
+                        break;
+                }
+            } catch (IOException e) {
+                //nothing
+            }
+        }
     }
 }
