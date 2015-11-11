@@ -25,7 +25,7 @@ public class Middle {
         System.out.println("Connected to flag");
         DataInputStream dis = flagConnection.openDataInputStream();
 
-        System.out.println("attempting to connect to racecar");
+        System.out.println("Attempting to connect to racecar");
         RemoteDevice end = Bluetooth.getKnownDevice("Batmobile");
         if (end == null) {
             System.out.println("No Such device existed");
@@ -41,9 +41,10 @@ public class Middle {
         }
         int reading = 0;
         try {
-            System.out.println("About to Read Signal");
+            System.out.println("About to Read Flag Signal");
             reading = dis.readInt();
-            System.out.println("Read signal ");
+            System.out.println("Got the Flag signal ");
+            dis.close();
         } catch (IOException E) {
 
         }
@@ -51,7 +52,7 @@ public class Middle {
         DataOutputStream dos = endConnection.openDataOutputStream();
         racecarConnection = endConnection;
         racecarOutputStream = dos;
-        System.out.println("output stream created");
+        System.out.println("output stream created, closed input flag stream");
 
         try {
             System.out.println("Sending Flag signal to racecar");
@@ -61,6 +62,7 @@ public class Middle {
         } catch (IOException E) {
 
         }
+        System.out.println("Entering remote control interface");
         run();
     }
 
@@ -78,11 +80,13 @@ public class Middle {
                 int buttonID = Button.waitForPress();
                 switch (buttonID) {
                     case 2:
+                        System.out.println("Sending Left Signal");
                         racecarOutputStream.writeInt(LEFT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Left Signal");
                         break;
                     case 4:
+                        System.out.println("Sending Right signal");
                         racecarOutputStream.writeInt(RIGHT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Right Signal");
@@ -94,6 +98,7 @@ public class Middle {
                         System.out.println("Sent Forward Signal");
                         break;
                     case 8:
+                        System.out.println("Sending stop Signal");
                         racecarOutputStream.writeInt(STOP);
                         racecarOutputStream.flush();
                         System.out.println("Sent stop Signal");
