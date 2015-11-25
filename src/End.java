@@ -19,6 +19,7 @@ public class End {
     private static DataInputStream remoteControlInputStream;
     private static SensorPort port;
     private static UltrasonicSensor ultrasonicSensor;
+    
     public static void main(String[] args) {
         System.out.println("Waiting for remoteControl");
         NXTConnection middle = Bluetooth.waitForConnection();
@@ -27,32 +28,22 @@ public class End {
         remoteControlConnection = middle;
         remoteControlInputStream = dis;
         System.out.println("input stream created");
-        int reading = -1;
-        try {
-            System.out.println("About to read signal");
-            reading = dis.readInt();
-            System.out.println("Recived signall");
-            
-        } catch(IOException E) {
-            //nothing
-        } 
-       
-        if (reading == FLAG_SIGNAL) {
-             System.out.println("Entering recieving signal mode");
-             prepare();
-             run();
-        }
+        LCD.clear();
+        System.out.println("Entering recieving signal mode");
+        prepare();
+        run();
     }
     public static void prepare() {
         port = SensorPort.S1;
         ultrasonicSensor = new UltrasonicSensor(port);
-        Motor.A.setSpeed(360);
-        Motor.C.setSpeed(360);
+        Motor.A.setSpeed(Motor.A.getMaxSpeed());
+        Motor.C.setSpeed(Motor.C.getMaxSpeed() - 10);
     }
     public static void run() {
         int pauseTime = 250;
         int turnDegree = 90;
-        moveForward();
+        //moveForward();
+        Sound.twoBeeps();
         try {
             while (true) {
                 scaning();
@@ -61,6 +52,7 @@ public class End {
                     int command = remoteControlInputStream.readInt();
                     switch (command) {
                         case LEFT:
+                            LCD.clear();
                             System.out.println("Recieved Left Signal");
                             stop();
                             //pause(pauseTime);
@@ -68,6 +60,7 @@ public class End {
                             System.out.println("Turing Left");
                             break;
                         case RIGHT:
+                            LCD.clear();
                             System.out.println("Recieved Right Signal");
                             stop();
                            // pause(pauseTime);
@@ -75,11 +68,13 @@ public class End {
                             System.out.println("Turing Right");
                             break;
                         case FWD:
+                            LCD.clear();
                             System.out.println("Recieved FWD Signal");
                             moveForward();
                             System.out.println("Moving FWD");
                             break;
                         case STOP:
+                            LCD.clear();
                             System.out.println("Recieved Stop Signal");
                             stop();
                             System.out.println("Stopped");

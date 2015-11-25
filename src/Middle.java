@@ -26,6 +26,7 @@ public class Middle {
         DataInputStream dis = flagConnection.openDataInputStream();
 
         System.out.println("Attempting to connect to racecar");
+        
         RemoteDevice end = Bluetooth.getKnownDevice("Batmobile");
         if (end == null) {
             System.out.println("No Such device existed");
@@ -39,65 +40,56 @@ public class Middle {
         } else {
             System.out.println("Connected to Racecar");
         }
+        
+        DataOutputStream dos = endConnection.openDataOutputStream();
+        racecarConnection = endConnection;
+        racecarOutputStream = dos;
+        System.out.println("output stream created");
+        
         int reading = 0;
         try {
-            System.out.println("About to Read Flag Signal");
+            System.out.println("Ready for Flag Signal");
             reading = dis.readInt();
             System.out.println("Got the Flag signal ");
             dis.close();
         } catch (IOException E) {
-
+            System.out.println("Could not read flag signal");
         }
-
-        DataOutputStream dos = endConnection.openDataOutputStream();
-        racecarConnection = endConnection;
-        racecarOutputStream = dos;
-        System.out.println("output stream created, closed input flag stream");
-
-        try {
-            System.out.println("Sending Flag signal to racecar");
-            dos.writeInt(reading);
-            dos.flush();
-            System.out.println("Sent flag singal to racecar");
-        } catch (IOException E) {
-
-        }
+        LCD.clear();
         System.out.println("Entering remote control interface");
         run();
     }
 
-    public void setRacecarConnection(NXTConnection racecarConnection) {
-        this.racecarConnection = racecarConnection;
-    }
-
-    public void setRacecarOutputStream(DataOutputStream racecarOutputStream) {
-        this.racecarOutputStream = racecarOutputStream;
-    }
-
     public static void run() {
+        Sound.beep();
+        System.out.println("Press the buttons");
         while (true) {
             try {
-                int buttonID = Button.waitForPress();
+                int buttonID = Button.waitForAnyPress();
                 switch (buttonID) {
                     case 2:
+                        LCD.clear();
                         System.out.println("Sending Left Signal");
                         racecarOutputStream.writeInt(LEFT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Left Signal");
                         break;
                     case 4:
+                        LCD.clear();
                         System.out.println("Sending Right signal");
                         racecarOutputStream.writeInt(RIGHT);
                         racecarOutputStream.flush();
                         System.out.println("Sent Right Signal");
                         break;
                     case 1:
+                        LCD.clear();
                         System.out.println("Sending Forward Signal");
                         racecarOutputStream.writeInt(FWD);
                         racecarOutputStream.flush();
                         System.out.println("Sent Forward Signal");
                         break;
                     case 8:
+                        LCD.clear();
                         System.out.println("Sending stop Signal");
                         racecarOutputStream.writeInt(STOP);
                         racecarOutputStream.flush();
